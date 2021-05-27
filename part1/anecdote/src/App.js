@@ -6,6 +6,15 @@ const Button = ({handleClick, text}) => (
   </button>
 )
 
+const Display = ({anecdote}) => {
+  return (
+    <div>
+      <h1>Anecdotes with most votes</h1>
+      <p>{anecdote}</p>
+    </div>
+  )
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often',
@@ -17,6 +26,9 @@ const App = () => {
   ]
   const [selected, setSelected] = useState(0)
   const [points, setPoints] = useState(Array.apply(null, new Array(anecdotes.length)).map(Number.prototype.valueOf,0))
+  const [max, setMax] = useState(0)
+  const anecWithPoints = {}
+  points.forEach((key, i) => anecWithPoints[key] = anecdotes[i])
 
   const next = () => {
     setSelected(Math.floor(Math.random() * anecdotes.length))
@@ -25,7 +37,9 @@ const App = () => {
   const vote = () => {
     const copy = [...points]
     copy[selected] += 1
+    const maximum = Math.max.apply(null, copy)
     setPoints(copy)
+    setMax(maximum)
   }
 
   return (
@@ -36,6 +50,7 @@ const App = () => {
         <Button handleClick={vote} text='vote'/>
         <Button handleClick={next} text='next anecdote'/>
       </div>
+      <Display anecdote={anecWithPoints[max]}/>
     </div>
   )
 }
